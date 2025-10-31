@@ -30,3 +30,4 @@ def delete_item(item_id: int):
     logger.info(f'받아온 item id: {item_id}')
     # 삭제 로직 수행(했다고 치자)
     return {'msg': f'{item_id} 에 대한 삭제에 성공 했습니다.'}
+
