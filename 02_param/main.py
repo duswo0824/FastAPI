@@ -24,4 +24,3 @@ def download_file(file_path:str):
 
 # /download/folder/sample.txt 로 들어오면...
 # @app.get('/download/folder/{file_path}') 이 요청을 찾는다.
-
