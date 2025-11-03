@@ -4,8 +4,6 @@ from fastapi import FastAPI, Query, Path
 
 import logging
 
-from starlette.staticfiles import PathLike
-
 # level : debug > info > warning > error > critical
 logging.basicConfig(
     level=logging.INFO,
