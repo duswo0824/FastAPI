@@ -33,3 +33,8 @@ def login(info:Annotated[Dict[str,Any],Body()]):
 
     return {'msg': msg,'success': success}
 
+@app.post('/join')
+def join(info:Annotated[Dict[str,Any],Body()]):
+    logger.info(f'info:{info}')
+    result = {'info':info, 'msg':'회원가입에 성공 하였습니다.'}
+    return result
