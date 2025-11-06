@@ -23,7 +23,7 @@
                     <th>아이디</th>
                     <th>이름</th>
                     <th>성별</th>
-                    <th>삭제하기</th>
+                    <th>상세보기</th>
                 </tr>
              </thead>
              <tbody id ="list">
@@ -43,8 +43,12 @@
             type:'get',
             data:{},
             success: function(data){ 
-                // console.log(data); // {list: Array(2)} list 안의
-                console.log(data.list); // (2) [{…}, {…}] 배열만
+                console.log(data); // {list: Array(2)} list 안의
+                // console.log(data.list); // (2) [{…}, {…}] 배열만
+                if(data.loginId == ''){ // 로그인 안하고 들어온
+                    alert('로그인이 필요한 서비스 입니다.');
+                    location.href='login.html';
+                }
                 let content = '';
                 for (const item of data.list) {
                     // console.log(item); // {id: 'admin', name: '이연재', gender: '여'}
@@ -55,7 +59,7 @@
                     content += '<td><a href="#">삭제하기</a></td>';
                     content += '</tr>';
                 }
-                $('#list').html(content);
+                $('#list').html(content); // 덮어쓰는 방식_새로운 것이 항상 위
             },error:function(err){ 
                 console.log(err);
             }
