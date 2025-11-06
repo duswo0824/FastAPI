@@ -47,7 +47,7 @@ def get_files():
     file_list = os.listdir(FILE_PATH)
     logger.info(f'file list: {file_list}')
     return{'files':file_list}
-'''
+
 @app.post('/upload')
 def upload_file(files: List[UploadFile]):
     for file in files:
@@ -77,7 +77,7 @@ def upload_file(files: List[UploadFile]): # files라는 이름으로 UploadFile�
             shutil.copyfileobj(file.file, file_obj) # copyfileobj : 왼쪽에서 뽑아온 내용을 오른쪽에 있는 가상 파일 객체에다가 복사해주는 기능_실제롤 뽑아온 내용을 복사 -> 특정한 경로로 저장
             #copyfileobj를 사용해서 왼쪽의 file 에서 뽑아낸 file 객체를 오른쪽에 경로에 있는 file_obj라는 가상 파일 객체에 복사해주면 특정한 경로로 저장된다.
     return {"msg": "upload가 완료되었습니다."} # msg라는 이름으로 upload가 완료되었습니다. 라는 데이터를 front로 응답을 준다.
-
+'''
 @app.get('/')
 def main():
     return {"msg": "This is main!!"}
