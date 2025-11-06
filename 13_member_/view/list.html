@@ -1,0 +1,64 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>registList</title>
+        <link rel="icon" href="./img01.jpg">
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+        <style>
+            table,th,td{
+                border: 1px solid black;
+                border-collapse: collapse;
+            }
+            th,td{
+                padding: 10px;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>회원리스트</h1>
+        <hr/>
+        <table>
+             <thead>
+                <tr>
+                    <th>아이디</th>
+                    <th>이름</th>
+                    <th>성별</th>
+                    <th>삭제하기</th>
+                </tr>
+             </thead>
+             <tbody id ="list">
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+             </tbody>
+        </table>
+    </body>
+    <script>
+        // html 문서를 읽자마자 아래 내용이 실행
+        $.ajax({
+            url:'/list',
+            type:'get',
+            data:{},
+            success: function(data){ 
+                // console.log(data); // {list: Array(2)} list 안의
+                console.log(data.list); // (2) [{…}, {…}] 배열만
+                let content = '';
+                for (const item of data.list) {
+                    // console.log(item); // {id: 'admin', name: '이연재', gender: '여'}
+                    content += '<tr>';
+                    content += '<td><a href="#">'+item.id+'</a></td>';
+                    content += '<td>'+item.name+'</td>';
+                    content += '<td>'+item.gender+'</td>';
+                    content += '<td><a href="#">삭제하기</a></td>';
+                    content += '</tr>';
+                }
+                $('#list').html(content);
+            },error:function(err){ 
+                console.log(err);
+            }
+        });
+    </script>
+</html>

@@ -76,10 +76,21 @@ def login(info:Dict[str,Any]):
         logger.error(e)
     finally:
         db.close()
-    return{'success':count} # insert 성공 1
+        return{'success':count} # insert 성공 1
 
 # 회원리스트
 @app.get('/list')
 def list(): # 매개변수 아무것도 없음
     member_list = []
-    return {'list':member_list}
+    db = None
+    sql = text("select id,name,gender from member;")
+    try:
+        db = get_db()
+        # 쿼리 실행 후 가져온 내용을 member_list 에 담아서 전송
+        member_list = db.execute(sql).mappings().fetchall() # result 자체가 배열[{}]
+        logger.info(f'member_list={member_list}')
+    except Exception as e :
+        logger.error(e)
+    finally:
+        db.close()
+        return {'list':member_list}
