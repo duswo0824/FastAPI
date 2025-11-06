@@ -95,12 +95,13 @@ def login(info:Dict[str,Any],req:Request):
 # 회원리스트
 @app.get('/list')
 def list(req:Request):
+    login_id = req.session.get('loginId', '')  # get(가져올값의 키, 없을 경우 반환할 값)
     member_list = []
     db = None
     sql = text("select id,name,gender from member;")
-    login_id = req.session.get('loginId','') # get(가져올값의 키, 없을 경우 만환할 값)
     logger.info(f'login_id={login_id}')
     if login_id == '': # session에 loginId 값이 없으면...
+        logger.info('로그인 안함!')
         return {'list':member_list,'loginId':login_id}
 
     try:
@@ -113,6 +114,31 @@ def list(req:Request):
     finally:
         db.close()
         return {'list':member_list,'loginId':login_id}
+'''
+# 회원리스트 코드리뷰
+@app.get('/list') # get 형식으로 /list 요청이 들어왔을 때 아래 있는 list 함수가 실행
+def list(req:Request): # 매개변수로는 Request 객체를 받음 
+    login_id = req.session.get('loginId','')  # get(가져올값의 키, 없을 경우 반환할 값)
+    # req 객체로 부터 session을 추출get 해서 loginId라는 값이 있는지 확인, 없을 경우 빈공백'' 을 반환 -> 이를 login_id라는 변수에 담음
+    member_list = [] # 빈리스트 
+    db = None # db에 아무것도 담지 않음
+    sql = text("select id,name,gender from member;") # 실행할 쿼리문을 준비
+    logger.info(f'login_id={login_id}')
+    if login_id == '':  # 만약 session에 loginId 값이 없으면... (로그인을 안했다고 판단)
+        return {'list':member_list,'loginId':login_id} # list에 빈 리스트, loginId는 없는 상태로 반환
+        # -> 로그인을 안했다면 더이상 진행하지 않음
+    try: # 로그인을 했다면 
+        db = get_db() # DB 접속
+        member_list = db.execute(sql).mappings().fetchall() 
+        # 위에서 준비한 sql 문 (쿼리문)이 실행 execute 되도록 한 후 mappings하고 fetchall을 통해 데이터를 가져옴
+        # 여기서 fetchall은 여러개의 모든 데이터를 가져옴, one은 한개만 가져옴
+        logger.info(f'member_list={member_list}') # 로그에 member_list의 값을 찍어줌
+    except Exception as e : # 만약 Exception 오류가 생겼다면...
+        logger.error(e) # 로그에 error가 난 부분을 찍어줌 
+    finally: # 마지막으로 정상적으로 실행 try 되던 이상이 생기던 except
+        db.close() # 최종적으로는 db를 닫아줌
+        return {'list':member_list,'loginId':login_id} # list 라는 이름으로 member_list에 있는 내용과 loginId란느 이름으로 login_id에 있는 값을 반환
+'''
 
 # 로그아웃
 @app.get('/logout')
