@@ -16,6 +16,9 @@
     </head>
     <body>
         <h1>회원리스트</h1>
+        <div id="loginBox">
+
+        </div>
         <hr/>
         <table>
              <thead>
@@ -49,6 +52,9 @@
                     alert('로그인이 필요한 서비스 입니다.');
                     location.href='login.html';
                 }
+
+                $('#loginBox').html(
+                    `안녕하세요 ${data.loginId}님, <button onclick="logout()">logout</button>`)
                 let content = '';
                 for (const item of data.list) {
                     // console.log(item); // {id: 'admin', name: '이연재', gender: '여'}
@@ -64,5 +70,20 @@
                 console.log(err);
             }
         });
+
+        function logout(){
+            $.ajax({
+                url:'/logout',
+                type:'get',
+                data:{},
+                dataType:'json',
+                success: function(data){ 
+                    console.log(data);
+                    location.href='login.html';
+                },error:function(err){ 
+                    console.log(err);
+                }
+            });
+        }
     </script>
 </html>

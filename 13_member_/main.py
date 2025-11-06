@@ -113,3 +113,9 @@ def list(req:Request):
     finally:
         db.close()
         return {'list':member_list,'loginId':login_id}
+
+# 로그아웃
+@app.get('/logout')
+def logout(req:Request):
+    req.session.clear() # 세션안의 내용을 깨끗하게 삭제
+    return {'msg':'logout'}
