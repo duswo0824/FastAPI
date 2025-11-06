@@ -67,7 +67,6 @@ def login(info:Dict[str,Any]):
     sql = text("select count(id) as cnt from member where id = :id and pw = :pw;")
     db = None
     count = 0
-
     try :
         db = get_db() # DB에 접속
         result = db.execute(sql, info).mappings().fetchone()# id와 pw를 둘다 만족하는 count 확인
@@ -78,3 +77,9 @@ def login(info:Dict[str,Any]):
     finally:
         db.close()
     return{'success':count} # insert 성공 1
+
+# 회원리스트
+@app.get('/list')
+def list(): # 매개변수 아무것도 없음
+    member_list = []
+    return {'list':member_list}
