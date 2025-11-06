@@ -119,7 +119,7 @@ def list(req:Request):
 @app.get('/list') # get 형식으로 /list 요청이 들어왔을 때 아래 있는 list 함수가 실행
 def list(req:Request): # 매개변수로는 Request 객체를 받음 
     login_id = req.session.get('loginId','')  # get(가져올값의 키, 없을 경우 반환할 값)
-    # req 객체로 부터 session을 추출get 해서 loginId라는 값이 있는지 확인, 없을 경우 빈공백'' 을 반환 -> 이를 login_id라는 변수에 담음
+    # req 객체로 부터 session에서 가져와서 추출get 해서 loginId라는 값이 있는지 확인, 없을 경우 빈공백'' 을 반환 -> 이를 login_id라는 변수에 담음
     member_list = [] # 빈리스트 
     db = None # db에 아무것도 담지 않음
     sql = text("select id,name,gender from member;") # 실행할 쿼리문을 준비
