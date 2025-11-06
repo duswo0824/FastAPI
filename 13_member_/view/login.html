@@ -1,0 +1,73 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>login</title>
+        <link rel="icon" href="./img01.jpg">
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+        <style>
+            table, th{
+                border: 1px solid black;
+                border-collapse: collapse;
+            }
+            th{
+                width: 50px;
+                padding: 10px;
+            }
+            input[type="submit"]{
+                height: 60px;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>로그인 페이지</h1>
+        <hr/>
+        <table>
+            <tr>
+                <th>ID</th>
+                <th><input type="text" name="id"/></th>
+                <th rowspan="2">
+                    <input type="submit" value="로그인" onclick="login()"/>
+                    <!-- submit은 원래 <form><form/> 안에서 사용 -->
+                </th>
+            </tr>
+            <tr>
+                <th>PW</th>
+                <th><input type="password" name="pw"/></th>
+            </tr>
+            <tr>
+                <th colspan="3">
+                    <input type="button" value="회원가입" onclick="regist()">
+                    <input type="button" value="아이디/비번찾기">
+                </th> 
+            </tr>
+        </table>        
+    </body>
+    <script>
+        function login(){
+            let param = {
+                'id' : $('input[name="id"]').val(),
+                'pw' : $('input[name="pw"]').val()
+            };
+            console.log(param);
+
+            $.ajax({
+                url:'http://127.0.0.1:8000/login',
+                type:'POST',
+                contentType:'application/json',
+                data:JSON.stringify(param),
+                dataType:'JSON',
+                success:function(data){
+                    console.log(data);
+                },
+                error:function(err){
+                    console.log(err);
+                }
+            });
+        }
+
+        function regist(){
+            location.href='./regist.html';
+        }
+
+    </script>
+</html>

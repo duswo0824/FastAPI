@@ -1,0 +1,128 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>regist</title>
+        <link rel="icon" href="./img01.jpg">
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+        <style>
+            table,th,td{
+                border: 1px solid black;
+                border-collapse: collapse;
+            }
+            th,td{
+                padding: 10px;
+            }
+            input[type="text"],input[type="email"],input[type="password"],input[type="range"]{
+                width: 100%;
+            }
+            input[name="user_id"]{
+                width: 65%;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>회원가입</h1>
+        <hr/>
+        <table>
+            <tr>
+                <th>아이디</th>
+                <td>
+                    <input name="user_id" type="text"/>
+                    <button onclick="overlay()">ID 중복체크</button>
+                    <div id="overlay"></div>
+                </td>
+            </tr>
+            <tr>
+                <th>비밀번호</th>
+                <td>
+                    <input name="user_pw" type="password"/>
+                </td>
+            </tr>
+            <tr>
+                <th>비밀번호 확인</th>
+                <td>
+                    <input id="confirm" type="password"/>
+                    <div id="msg"></div>
+                </td>
+            </tr>
+            <tr>
+                <th>이름</th>
+                <td><input name="user_name" type="text"/></td>
+            </tr>
+            <tr>
+                <th>이메일</th>
+                <td><input name="email" type="email"/></td>
+            </tr>
+            <tr>
+                <th>성별</th>
+                <td>
+                    <input type="radio" name="gender" value="남"/>남자
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input type="radio" name="gender" value="여"/>여자
+                </td>
+            </tr>
+                <tr>
+                <th>나이</th>
+                <td>
+                    <input type="number" min="20" max="100" value="20"/>
+                </td>
+            </tr>
+            <tr>
+                <th colspan="2">
+                    <button onclick="save()">회원가입</button>
+                </th>
+            </tr>
+        </table>
+    </body>
+    <script>
+        // 아이디 중복 확인
+        function overlay(){
+            let id = $('input[name="user_id"]').val();
+            console.log(id);
+            $.ajax({
+                url:'/overlay', // 서버 안에 있기 때문에 가능
+                type: 'GET',
+                data: {'id':id},
+                success:function(data){
+                    console.log(data);
+                    if(data.use == 0){
+                        $('#overlay').html('사용가능한 아이디 입니다.')
+                        $('#overlay').css({'color':'green'})
+                    }else{
+                        $('#overlay').html('사용 중인 아이디 입니다.')
+                        $('#overlay').css({'color':'red'})
+                        $('input[name="user_id"]').val('')
+                    }
+                },
+                error:function(err){ 
+                    console.log(err);
+                }
+            });
+        }
+
+        // 회원가입
+        function save(){
+            let param = {};
+            param.id = $('input[name="user_id"]').val();
+            param.pw = $('input[name="user_pw"]').val();
+            param.name = $('input[name="user_name"]').val();
+            param.email = $('input[name="email"]').val();
+            param.gender = $('input[name="gender"]:checked').val();
+            param.age = $('input[type="number"]').val();
+            console.log(param);
+            // param을 서버에 전송
+            $.ajax({
+                url:'/join', // http://127.0.0.1:8000 안들어가도됨 (같은 서버상에 있음)
+                type:'POST', // 보안성 중요, 갯수가 많음
+                data:JSON.stringify(param),
+                contentType:'application/json', 
+                dataType:'json',
+                success: function(data){ 
+                    console.log(data);
+                },error:function(err){ 
+                    console.log(err);
+                }
+            });
+        }
+    </script>
+</html>
