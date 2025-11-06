@@ -59,3 +59,22 @@ def join(info:Dict[str,Any]):
     finally:
         db.close()
         return {'row':row} # 몇개가 데이터 반환 1 : insert 성공
+
+# 로그인
+@app.post('/login')
+def login(info:Dict[str,Any]):
+    logger.info(f'info={info}')
+    sql = text("select count(id) as cnt from member where id = :id and pw = :pw;")
+    db = None
+    count = 0
+
+    try :
+        db = get_db() # DB에 접속
+        result = db.execute(sql, info).mappings().fetchone()# id와 pw를 둘다 만족하는 count 확인
+        logger.info(f'result={result}')
+        count = result['cnt'] # 해당 내용을 count 변수에 대입
+    except Exception as e :
+        logger.error(e)
+    finally:
+        db.close()
+    return{'success':count} # insert 성공 1

@@ -119,6 +119,12 @@
                 dataType:'json',
                 success: function(data){ 
                     console.log(data);
+                    if(data.row > 0){
+                        alert('회원가입에 성공 했습니다.')
+                        location.href='login.html'
+                    }else{
+                        alert('회원가입에 실패 했습니다. 다시 시도해 주세요')
+                    }
                 },error:function(err){ 
                     console.log(err);
                 }
