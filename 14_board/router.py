@@ -42,3 +42,8 @@ def login(info: Dict[str, str], req:Request):
 @app.get("/list")
 def list(req:Request):
     return board.list(req.session)
+
+@app.get("/logout")
+def logout(req:Request):
+    req.session.clear()
+    return RedirectResponse("/view/login.html")

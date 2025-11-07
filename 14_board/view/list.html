@@ -37,6 +37,7 @@
                 </tr>
             </tbody>
         </table>
+        <button onclick="location.href='write.html'">글쓰기</button>
     </body>
     <script>
         // html 문서를 읽자마자 아래 내용이 실행
@@ -51,7 +52,7 @@
                 alert('로그인이 필요한 서비스 입니다.')
                 location.href = '/'
             }else{
-                $('#loginBox').html('안녕하세요 '+data.login+'님 <a href="#" onclick="logout()">로그아웃</a>')
+                $('#loginBox').html('안녕하세요 '+data.login+'님 <a href="/logout">로그아웃<a>');
                 let content = '';
                 for (const item of data.list) {
                     content += '<tr>';
@@ -68,11 +69,5 @@
             console.log(err);
         }
         });
-
-        function logout(){
-
-        }
-
-
     </script>
 </html>
