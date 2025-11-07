@@ -1,0 +1,78 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>board list</title>
+        <link rel="icon" href="./img01.jpg">
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+        <style>
+            table,th,td{
+                border: 1px solid black;
+                border-collapse: collapse;
+            }
+            th,td{
+                padding: 10px;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>게시글 리스트</h1>
+        <div id="loginBox">
+        </div>
+        <hr/>
+        <table>
+            <thead>
+                <tr>
+                    <th>글번호</th>
+                    <th>제목</th>
+                    <th>작성자</th>
+                    <th>작성일</th>
+                    <th>조회수</th>
+                </tr>
+            </thead>
+            <tbody id="list">
+                <tr>
+                    <th colspan="5">
+                        작성된 게시글이 없습니다.
+                    </th>
+                </tr>
+            </tbody>
+        </table>
+    </body>
+    <script>
+        // html 문서를 읽자마자 아래 내용이 실행
+        $.ajax({
+        url:'/list',
+        type:'get',
+        data:{},
+        dataType:'JSON',
+        success:function(data){
+            console.log(data);
+            if(data.login == ''){
+                alert('로그인이 필요한 서비스 입니다.')
+                location.href = '/'
+            }else{
+                $('#loginBox').html('안녕하세요 '+data.login+'님 <a href="#" onclick="logout()">로그아웃</a>')
+                let content = '';
+                for (const item of data.list) {
+                    content += '<tr>';
+                    content += '<td>'+item.idx+'</td>';
+                    content += '<td><a href="#">'+item.subject+'</a></td>';
+                    content += '<td>'+item.user_name+'</td>';
+                    content += '<td>'+item.reg_date+'</td>';
+                    content += '<td>'+item.b_hit+'</td>';
+                    content += '</tr>';
+                }
+                $('#list').html(content);
+            }
+        },error:function(err){
+            console.log(err);
+        }
+        });
+
+        function logout(){
+
+        }
+
+
+    </script>
+</html>

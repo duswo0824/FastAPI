@@ -13,6 +13,7 @@ from starlette.staticfiles import StaticFiles
 
 from util.logger import Logger
 import member
+import board
 
 app = FastAPI()
 
@@ -37,3 +38,7 @@ def login(info: Dict[str, str], req:Request):
     session = req.session
     success = member.login(info, session)
     return {"success": success}
+
+@app.get("/list")
+def list(req:Request):
+    return board.list(req.session)
