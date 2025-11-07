@@ -1,0 +1,54 @@
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<link rel="stylesheet" href="./common.css">
+<style></style>
+</head>
+<body>
+	<h3>수정</h3>
+	<form action="update.do" method="post" enctype="multipart/form-data">
+	<input type="hidden" name="idx" value=""/>
+		<table>
+			<tr>
+				<th>제목</th>
+				<td><input type="text" name="subject" value=""/></td>
+			</tr>
+			<tr>
+				<th>작성자</th>
+				<td><input type="text" name="user_name"value=""/></td>
+			</tr>
+			<tr>
+				<th>내용</th>
+				<td><textarea name = "content"></textarea></td>
+			</tr>
+			
+
+				<tr>
+					<th>사진</th>
+					<td>
+						<p>
+							<img src="/file/${photo.new_filename}"
+								width="500px"/>
+						</p>				
+					</td>
+				</tr>			
+
+			
+			<tr>
+				<th>사진 추가</th>
+				<td><input type="file" name="files" multiple="multiple"/></td>
+			</tr>
+			
+			<tr>
+				<th colspan="2">
+					<input type="button" value="리스트"/>
+					<button>저장</button>
+				</th>
+			</tr>
+		</table>
+	</form>
+</body>
+<script></script>
+</html>
