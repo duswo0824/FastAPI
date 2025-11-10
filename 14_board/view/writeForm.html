@@ -76,6 +76,10 @@
                 dataType:'JSON',
                 success:function(data){
 					console.log(data);
+					if (data.success == 'ture'){
+						alert('글 작성에 설공했습니다.');
+						location.href = 'list.html'
+					}
                 },error:function(err){
                     console.log(err);
                 }
