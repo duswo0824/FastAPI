@@ -1,3 +1,5 @@
+from fastapi import params
+
 from util.database import get_db
 from util.logger import Logger
 from sqlalchemy import text
@@ -26,3 +28,25 @@ def list(session):
     finally:
         db.close()
         return {'list':list,'login':login_id}
+
+def write(subject, user_name, content, files):
+    result = {'success':'false'}
+    # bbs 에 subject, user_name, content 저장
+    sql = text('insert into bbs (subject,user_name,content)values(:subject,:user_name,:content)')
+    params = {'subject':subject, 'user_name':user_name, 'content':content}
+    conn = get_db()
+    try:
+         exec_result = conn.execute(sql, params)
+         # exec_result.rowcount = 영향받은 데이터 수
+         # logger.info(f'exec_result = {exec_result.rowcount}')
+         # exec_result.lastrowid = 가장 마지막 row rkqt
+         logger.info(f'exec_result:{exec_result.lastrowid}')
+         if exec_result.rowcount > 0:
+             result['success'] = 'true'
+             conn.commit()
+    except Exception as e:
+        logger.error(e)
+        conn.rollback()
+    finally:
+        conn.close()
+        return result

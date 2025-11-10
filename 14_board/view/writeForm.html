@@ -1,8 +1,26 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>writeForm</title>
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<style>
+	table,th,td{
+		border: 1px solid black;
+		border-collapse: collapse;
+		padding: 5px 10px;
+	}
+	table{
+		width: 500px;
+	}
+	input[type="text"]{
+		width: 100%;
+	}
+	textarea{
+		width: 100%;
+		height: 150px;
+		resize: none;
+	}
+</style>
 </head>
 <body>
 	<h3>글쓰기</h3>
@@ -13,11 +31,15 @@
 			</tr>
 			<tr>
 				<th>작성자</th>
-				<td><input type="text" name="user_name" readonly="true"/></td>
+				<td><input type="text" name="user_name"/></td>
 			</tr>
 			<tr>
 				<th>내용</th>
 				<td><textarea name="content"></textarea></td>
+			</tr>
+			<tr>
+				<th>사진</th>
+				<td><input type="file" name="files" multiple="multiple"/></td>
 			</tr>
 			<tr>
 				<th colspan="2">
@@ -28,9 +50,36 @@
 		</table>
 </body>
 <script>
-
 	function save(){
+		const formData = new FormData();
 
+		let subject = $('input[name="subject"]').val();
+		let user_name = $('input[name="user_name"]').val();
+		let content = $('textarea').val();
+		formData.append('subject',subject);
+		formData.append('user_name',user_name);
+		formData.append('content',content);
+		console.log(subject+','+user_name+','+content)
+		
+		let file = $('input[name="files"]');
+		for (let f of file[0].files){
+			formData.append('files',f);
+			console.log(f);
+		}
+		$.ajax({
+                url:'/write',
+                type:'POST',
+				enctype:'multipart/form-data',
+                contentType:false,
+				processData:false,
+                data:formData,
+                dataType:'JSON',
+                success:function(data){
+					console.log(data);
+                },error:function(err){
+                    console.log(err);
+                }
+            });
 	}
 </script>
 </html>

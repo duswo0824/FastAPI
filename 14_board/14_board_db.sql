@@ -15,7 +15,7 @@ select*from bbs;
 select idx,subject,user_name,reg_date,b_hit from bbs order by idx desc;
 
 insert into bbs(subject,user_name,content)
-values('테스트 제목','admin','abcde');
+values('테스트 제목','admin','간단한 소개 글');
 
 -- delete from bbs;
 

@@ -1,11 +1,11 @@
 # pip install pymysql sqlalchemy
 # pip install itsdangerous
-from typing import Dict
+from typing import Dict, List
 
 # Router 는 본래 분배하는 역할 수행
 # client 로 부터 요청이 들어오면 해당 요청을 분배
 # 기존 main 에서 처리하던일을 나눠서 처리한다는 개념
-from fastapi import FastAPI
+from fastapi import FastAPI, UploadFile, Form, File
 from starlette.middleware.sessions import SessionMiddleware
 from starlette.requests import Request
 from starlette.responses import RedirectResponse
@@ -47,3 +47,19 @@ def list(req:Request):
 def logout(req:Request):
     req.session.clear()
     return RedirectResponse("/view/login.html")
+
+# 문자열 + 파일 같이 오는 상황에서 구분이 필요하다.
+# 각 필드마다 Form 데이터 인지, File 인지 구분해 준다.
+@app.post("/write")
+def write(
+    subject: str = Form(...),
+    user_name: str = Form(...),
+    content: str = Form(...),
+    files: List[UploadFile] = File([])):
+
+    logger.info(f'subject:{subject}')
+    logger.info(f'user_name:{user_name}')
+    logger.info(f'content:{content}')
+    logger.info(f'files:{files}')
+
+    return board.write(subject, user_name, content, files)
