@@ -1,8 +1,16 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>detail</title>
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<style>
+	table,th,td{
+    border: 1px solid black;
+    border-collapse: collapse;
+	padding: 5px 10px;
+	}
+
+</style>
 </head>
 <body>
 	<table>
@@ -26,6 +34,10 @@
 				<th>내용</th>
 				<td id="content"></td>
 			</tr>
+			<tr id="photo">
+				<th>사진</th>
+				<td></td>
+			</tr>
 			<tr>
 				<th colspan="2">
 					<input type="button" value="리스트" onclick="location.href='list.html'"/>
@@ -34,6 +46,9 @@
 		</table>
 </body>
 <script>
+	// location.search -> ?idx=4
+	// split : 가른다의 의미
+	const idx = location.search.split('=')[1]; // [?idx=4]
 
 </script>
 </html>
