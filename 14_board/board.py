@@ -132,3 +132,34 @@ def delete(idx):
         conn.rollback()
     finally:
         conn.close()
+
+def update(login_id, subject, idx, content, files):
+    success = False
+
+    if login_id == '':
+        return {'login': login_id, 'success': success}
+
+    conn = get_db()
+
+    try:
+        # update 구문 실행
+        sql = text('UPDATE bbs SET subject=:subject, content=:content WHERE idx=:idx')
+        conn.execute(sql, {'subject': subject, 'content': content, 'idx': idx})
+
+        # upload 파일이 있는지 확인
+        if len(files) > 0:
+            file_list = file_save(files)  # files 를 주면 저장 후 원래파일명, 변경된 파일명 리스트를 반환한다.
+            # 있으면 photo 에 저장 -> DB 에 저장
+            sql = text('INSERT INTO photo(ori_filename,new_filename,idx)VALUES(:ori_filename,:new_filename,:idx)')
+            for file in file_list:
+                file['idx'] = idx
+                conn.execute(sql, file)
+
+        conn.commit()
+        success = True
+    except Exception as e:
+        logger.error(e)
+        conn.rollback()
+    finally:
+        conn.close()
+        return {'login': login_id, 'success': success}

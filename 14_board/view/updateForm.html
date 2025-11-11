@@ -1,54 +1,130 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>updateForm</title>
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<link rel="stylesheet" href="./common.css">
-<style></style>
+<style>
+	table, th, td{
+			border: 1px solid black;
+			border-collapse: collapse;
+			padding: 5px 10px;
+		}
+		table{
+			width: 500px;
+		}
+
+		input[type="text"]{
+			width: 100%;
+		}
+		textarea{
+			width: 100%;
+			height: 150px;
+			resize: none;
+		}
+</style>
 </head>
 <body>
 	<h3>수정</h3>
-	<form action="update.do" method="post" enctype="multipart/form-data">
-	<input type="hidden" name="idx" value=""/>
 		<table>
 			<tr>
 				<th>제목</th>
-				<td><input type="text" name="subject" value=""/></td>
+				<td><input id="subject" type="text" name="subject" value=""/></td>
 			</tr>
 			<tr>
 				<th>작성자</th>
-				<td><input type="text" name="user_name"value=""/></td>
-			</tr>
+				<td id="user_name"></td>
 			<tr>
 				<th>내용</th>
-				<td><textarea name = "content"></textarea></td>
+				<td><textarea id="content" name = "content"></textarea></td>
 			</tr>
-			
-
-				<tr>
+				<tr id="photo">
 					<th>사진</th>
 					<td>
 						<p>
-							<img src="/file/${photo.new_filename}"
-								width="500px"/>
+							<img src="" width="500px"/>
 						</p>				
 					</td>
-				</tr>			
-
-			
+				</tr>
 			<tr>
 				<th>사진 추가</th>
 				<td><input type="file" name="files" multiple="multiple"/></td>
 			</tr>
-			
 			<tr>
 				<th colspan="2">
-					<input type="button" value="리스트"/>
-					<button>저장</button>
+					<input type="button" value="리스트" onclick="location.href='list.html'"/>
+					<button onclick="save()">저장</button>
 				</th>
 			</tr>
 		</table>
 	</form>
 </body>
-<script></script>
+<script>
+	const idx = location.search.split('=')[1]; // [?idx,4]
+	console.log(idx);
+
+	function save(){
+		// idx, subject, content, files 를 formdata 에 담자
+		let subject = $('#subject').val();
+		let content = $('#content').val();
+		//console.log(subject+', '+content);
+		let form = new FormData();
+		form.append('idx',idx);
+		form.append('subject',subject);
+		form.append('content',content);
+		
+		let files = $('input[name="files"]')[0].files
+		for (const file of files) {
+			//console.log(file);
+			form.append('files',file);
+		}
+		$.ajax({
+			url:'/update',
+			type:'POST',
+			enctype:'multipart/form-data',
+			dataType:'JSON',
+			contentType:false,
+			processData:false,
+			data:form,
+			success:function(data){
+				console.log(data);
+				if(data.success == true){
+					location.href = 'detail.html?idx='+idx;
+				}
+			},error:function(err){
+				console.log(err);
+			}
+
+		});
+	}
+
+	$.ajax({
+		url:'/detail?idx='+idx,
+		type:'get',
+		data:{},
+		dataType:'JSON',
+		success:function(obj){
+			console.log(obj)
+			if(obj.login == ''){
+				alert('로그인이 필요한 서비스 입니다.');
+				location.href = '/';
+			}
+			$('#subject').val(obj.post.subject);
+			$('#user_name').html(obj.post.user_name);
+			$('#content').html(obj.post.content);
+
+			if(obj.photos.length > 0){
+				let content = '';
+				for(photo of obj.photos){
+					content += '<img src="/upload/'+photo.new_filename+'" width="200"/><br/>';
+				}
+				$('#photo td').html(content);				
+			}else{
+				$('#photo').hide();
+			}
+
+		},error:function(err){
+			console.log(err)
+		}
+	});	
+</script>
 </html>

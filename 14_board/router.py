@@ -75,3 +75,20 @@ def detail(req:Request, idx:int):
 def delete(idx:int):
     board.delete(idx)
     return RedirectResponse("/view/list.html") # 새로고침의 개념
+
+@app.post("/update")
+def update(
+    req:Request,
+    idx: str = Form(...),
+    subject: str = Form(...),
+    content: str = Form(...),
+    files: List[UploadFile] = File([])):
+
+    login_id = req.session.get('loginId','')
+    logger.info(f'loginId:{login_id}')
+    logger.info(f'subject:{subject}')
+    logger.info(f'idx:{idx}')
+    logger.info(f'content:{content}')
+    logger.info(f'files:{len(files)}') # files:0 , len: 길이
+
+    return board.update(login_id, subject, idx, content, files)
