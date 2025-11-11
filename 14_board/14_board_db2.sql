@@ -25,3 +25,10 @@ select*from bbs;
 -- new_filename : 123456789.png
 insert into photo(ori_filename,new_filename,idx)values('test.png','123456789.png',3);
 select*from photo;
+
+select * from bbs where idx = 6;
+select * from photo where idx = 6;
+
+update bbs set b_hit = b_hit+1 where idx = 6;
+
+-- ALTER TABLE bbs AUTO_INCREMENT = 7; -- 다음 번호를 7로 시작

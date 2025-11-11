@@ -9,7 +9,6 @@
     border-collapse: collapse;
 	padding: 5px 10px;
 	}
-
 </style>
 </head>
 <body>
@@ -49,6 +48,39 @@
 	// location.search -> ?idx=4
 	// split : 가른다의 의미
 	const idx = location.search.split('=')[1]; // [?idx=4]
+	console.log(idx);
 
+	$.ajax({
+			url:'/detail?idx='+idx,
+			type:'get',
+			data:{},
+			dataType:'JSON',
+			success:function(obj){
+				console.log(obj);
+				if(obj.login == ''){
+					alert('로그인이 필요한 서비스 입니다.');
+					location.href = '/'; // main으로
+				}
+				$('#subject').html(obj.post.subject)
+				$('#user_name').html(obj.post.user_name)
+				$('#reg_date').html(obj.post.reg_date)
+				$('#bhit').html(obj.post.b_hit)
+				$('#content').html(obj.post.content)
+
+				if(obj.photos.length > 0){
+					let content = '';
+					for(photo of obj.photos){
+						content += '<img src="/upload/'+photo.new_filename+'" width="200"/><br/>';
+					}
+					$('#photo td').html(content);
+				}else{
+					$('#photo').hide();
+				}
+				
+			},
+			error:function(err){
+				console.log(err);
+			}
+		});
 </script>
 </html>

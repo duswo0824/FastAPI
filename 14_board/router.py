@@ -63,3 +63,10 @@ def write(
     logger.info(f'files:{files}')
 
     return board.write(subject, user_name, content, files)
+
+@app.get("/detail")
+def detail(req:Request, idx:int):
+    login_id = req.session['loginId']
+    logger.info(f'loginId:{login_id}')
+    logger.info(f'idx={idx}')
+    return board.detail(login_id,idx)

@@ -57,7 +57,7 @@ def write(subject, user_name, content, files):
          # logger.info(f'exec_result = {exec_result.rowcount}')
          # exec_result.lastrowid = 가장 마지막 row 값 == 방금넣은 idx 값
          logger.info(f'exec_result = {exec_result.lastrowid}')
-         if exec_result.rowcount > 0:
+         if exec_result.lastrowid > 0:
              result['success'] = 'true'
              # 파일들을 전달하면 저장하고 생성된 새로운 이름을 받는다.
              file_list = file_save(files)
@@ -75,14 +75,29 @@ def write(subject, user_name, content, files):
         return result
 
 def detail(login_id, idx):
-    
+    post = {}
+    photos = []
     # login 체크
-    
-    # 게시글 가져오기
+    if login_id == '':
+        return{'login':login_id, 'post':post,'photos':photos}
 
-    # 사진 리스트 가져오기
-
-    # 조회수 올리기
-
-    # 결과값 반환
-    return None
+    conn = get_db()
+    try:
+        # 게시글 가져오기
+        sql = text('SELECT * FROM bbs WHERE idx=:idx')
+        post = conn.execute(sql, {'idx':idx}).mappings().fetchone()
+        # 사진 리스트 가져오기
+        sql = text('SELECT * FROM photo WHERE idx=:idx')
+        photos = conn.execute(sql, {'idx':idx}).mappings().fetchall()
+        # 조회수 올리기
+        sql = text('UPDATE bbs SET b_hit = b_hit+1 WHERE idx =:idx')
+        exec_result = conn.execute(sql, {'idx':idx})
+        logger.info(f'updated row = {exec_result.rowcount}')
+        # 결과값 반환
+        conn.commit()
+        pass
+    except Exception as e:
+        logger.error(e)
+        conn.rollback()
+    finally:
+        return{'login':login_id, 'post':post,'photos':photos}
