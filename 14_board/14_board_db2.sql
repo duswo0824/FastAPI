@@ -32,7 +32,7 @@ select * from photo where idx = 7;
 update bbs set b_hit = b_hit+1 where idx = 7;
 
 ALTER TABLE bbs AUTO_INCREMENT = 7; -- 다음 번호를 7로 시작
-
+ALTER TABLE photo AUTO_INCREMENT = 7;
 -- 삭제하기 순서
 -- 삭제할 파일 이름
 select new_filename from photo where idx = 7;
@@ -42,4 +42,3 @@ delete from photo where idx = 7;
 
 -- delete bbs; -- 부모 마지막에
 delete from bbs where idx = 7;
-
