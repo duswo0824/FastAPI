@@ -26,9 +26,20 @@ select*from bbs;
 insert into photo(ori_filename,new_filename,idx)values('test.png','123456789.png',3);
 select*from photo;
 
-select * from bbs where idx = 6;
-select * from photo where idx = 6;
+select * from bbs where idx = 7;
+select * from photo where idx = 7;
 
-update bbs set b_hit = b_hit+1 where idx = 6;
+update bbs set b_hit = b_hit+1 where idx = 7;
 
--- ALTER TABLE bbs AUTO_INCREMENT = 7; -- 다음 번호를 7로 시작
+ALTER TABLE bbs AUTO_INCREMENT = 7; -- 다음 번호를 7로 시작
+
+-- 삭제하기 순서
+-- 삭제할 파일 이름
+select new_filename from photo where idx = 7;
+
+-- delete photo; -- photo 가 자식이기 때문에 먼저 지워져야함
+delete from photo where idx = 7;
+
+-- delete bbs; -- 부모 마지막에
+delete from bbs where idx = 7;
+

@@ -66,7 +66,12 @@ def write(
 
 @app.get("/detail")
 def detail(req:Request, idx:int):
-    login_id = req.session['loginId']
+    login_id = req.session.get('loginId','')
     logger.info(f'loginId:{login_id}')
     logger.info(f'idx={idx}')
     return board.detail(login_id,idx)
+
+@app.get("/delete/{idx}")
+def delete(idx:int):
+    board.delete(idx)
+    return RedirectResponse("/view/list.html") # 새로고침의 개념

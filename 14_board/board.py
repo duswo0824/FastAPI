@@ -101,3 +101,34 @@ def detail(login_id, idx):
         conn.rollback()
     finally:
         return{'login':login_id, 'post':post,'photos':photos}
+
+def delete(idx):
+    conn = get_db()
+
+    try:
+        # idx 에 해당하는 파일명
+        sql = text('SELECT new_filename FROM photo WHERE idx=:idx')
+        photos = conn.execute(sql, {'idx':idx}).mappings().fetchall()
+
+        # photo 에서 해당 idx 를 가지고 있는 데이터 삭제(자식)
+        sql = text('DELETE FROM photo WHERE idx=:idx')
+        exec_result = conn.execute(sql, {'idx':idx})
+        logger.info(f'deleted row : {exec_result.rowcount}')
+
+        # bbs 에서 해당 idx 를 가지고 있는 데이터 삭제(부모)
+        sql = text('DELETE FROM bbs WHERE idx=:idx')
+        conn.execute(sql, {'idx':idx})
+
+        # 진짜 파일 삭제
+        for name in photos:
+            path = f'upload/{name.new_filename}'
+            logger.info(f'path = {path}')
+            if os.path.exists(path): # os : 기본 경로
+                logger.info('exists!!')
+                os.remove(path)
+        conn.commit()
+    except Exception as e:
+        logger.error(e)
+        conn.rollback()
+    finally:
+        conn.close()
