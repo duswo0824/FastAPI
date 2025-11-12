@@ -1,0 +1,101 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Cacading Style Sheet</title>
+        <link rel="icon" href="./img01.jpg">
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+        <style>
+            a{
+                text-decoration: none;
+            }
+            a:link{
+                color:black;
+            }
+            a:visited{
+                color: gray;
+            }
+            input[type="text"]{
+                height: 40px;
+                width: 80%;
+                border-width: 0 0 2 0;
+                border-color: skyblue;
+                font-size: 20px;
+            }
+            input:focus{
+                outline: none;
+            }
+            button{
+                background-color: skyblue;
+                color: white;
+                width: 15%;
+                height: 40px;
+                font-size: 15px;
+                border: 1px solid blue;
+                cursor: pointer;
+            }
+            button:hover{
+                background-color: white;
+                color: blue;
+            }
+            div.item{
+                padding: 15px;
+                border-bottom: 1px solid lightgray;
+            }
+            div.item:hover{
+                background-color: lightgoldenrodyellow;
+                cursor: pointer;
+            }
+            div.text{
+                font-weight: 600;
+            }
+            div.text span{
+                background-color: lightgray;
+                padding: 5px;
+                font-weight: 100px;
+                font-size: 10px;
+                color: orangered;
+            }
+        </style>
+    </head>
+    <body>
+        <h2>사람인 검색</h2>
+        <hr/>
+        <input type="text" value="python"/>
+        <button onclick="search()">검색</button>
+        <div id="list"></div>
+    </body>
+    <script>
+        // 크롤링 순서
+        // 1. 원하는 사이트를 지정(사람인)
+        // 2. 원하는 정보를 호출하기 위한 주소 확인(주소와 파라메터값 확인)
+        // https://www.saramin.co.kr/zf_user/search
+        // ?searchword=fastapi&recruitPage=1&recruitSort=closing_dt&recruitPageCount=100
+        // 3. 원하는 정보를 가져오기 위한 구조 확인(#recruit_info_list div.content div.item_recruit)
+        
+        function search(){
+            $.ajax({
+                url:'/search?keyword='+$('input[type="text"]').val(),
+                type:'GET',
+                data:{},
+                dataType:'JSON',
+                success:function(data){
+                    // console.log(data);
+                    let content = '';
+                    for (info of data.list){
+                        content += '<div class="item">';
+                        content += '<div class="text">';
+                        content += '<a href="https://www.saramin.co.kr'+info.link+'">'+info.title+'</a> <span>'+info.date+'</span>';   
+                        content += '</div>';
+                        content += '</div>';
+                        // console.log(info.title);
+                        // console.log(info.link);
+                        // console.log(info.date);
+                    }
+                    $('#list').html(content);
+                },error:function(error){
+                    console.log(error);
+                }
+            });
+        }
+    </script>
+</html>
