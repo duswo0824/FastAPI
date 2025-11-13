@@ -14,14 +14,14 @@ logger = Logger().get_logger(__name__)
 app.mount("/view", StaticFiles(directory="view"), name="view")
 
 # selenium driver 등록
-driver_path = './driver/chromedriver.exe'
+driver_path = './drivers/chromedriver'
 
 options = ChromiumOptions()
-options.add_argument('--remote-allow-origins=*') # 이 옵션이 있어야 외부사이트 접속이 가능
-options.add_argument('--start-maximized') # 시작하자마자 브라우저 최대화(반응형 때문에)
+options.add_argument('--remote-allow-origin=*') # 이 옵션이 있어야 외부사이트 접속이 가능
+options.add_argument('--start-maximized')       # 시작하자마자 브라우저 최대화(반응형 때문에)
 
 @app.get("/search")
-def search(keyword: str):
+def search(keyword:str):
     job_list = []
     # 1. 드라이버 초기화
     service = Service()
@@ -31,15 +31,15 @@ def search(keyword: str):
     url += f'?searchword={keyword}&recruitPage=1&recruitSort=closing_dt&recruitPageCount=20'
     driver.get(url)
     # 3. 가져오기
-    elements = driver.find_elements(By.CSS_SELECTOR,'#recruit_info_list div.content div.item_recruit')
+    elements = driver.find_elements(By.CSS_SELECTOR, '#recruit_info_list div.content div.item_recruit')
     logger.info(len(elements))
 
     for elem in elements:
-        #  elem 을 통해 find_element() 나 find_elements()을 이용해 새로운 elem을 추출할 수 있다.
-        a_tag = elem.find_element(By.CSS_SELECTOR,'div.area_job h2.job_tit a')
+        # elem 을 통해 find_element() 나 find_elements() 을 이용해 새로운 elem 을 추출할 수 있다.
+        a_tag = elem.find_element(By.CSS_SELECTOR, 'div.area_job h2.job_tit a')
         title = a_tag.text
         link = a_tag.get_attribute('href')
-        date = elem.find_element(By.CSS_SELECTOR,'div.area_job div.job_date span.date')
+        date = elem.find_element(By.CSS_SELECTOR, 'div.area_job div.job_date span.date')
         job_list.append({'title': title, 'date': date.text, 'link': link})
 
     # 자원 반납
@@ -49,4 +49,4 @@ def search(keyword: str):
 
 @app.get("/")
 def root():
-    return RedirectResponse(url='/view/index.html')
+    return RedirectResponse("/view/index.html")
