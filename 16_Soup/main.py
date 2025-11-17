@@ -77,7 +77,7 @@ async def search(keyword: str):
                 'date': dates
             })
             # to_sql 을 통해 DB에 넣는다.
-            df.to_sql('recruit', con=get_engine(), if_exists='replace')
+            df.to_sql('recruit', con=get_engine(), if_exists='replace') # replace: 덮어쓰기
             
             info_list.append({'title': title, 'date': date.text, 'link': link})
 
