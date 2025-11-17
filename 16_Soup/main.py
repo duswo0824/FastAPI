@@ -5,6 +5,8 @@ from starlette.responses import RedirectResponse
 from starlette.staticfiles import StaticFiles
 
 from logger import Logger
+import pandas as pd
+from database import get_engine
 
 app = FastAPI()
 
@@ -40,6 +42,21 @@ async def search(keyword: str):
         logger.info(f'elements: {len(elements)}') # len의 수가 20이면 정상
 
         info_list = []
+        
+        # dataFrame -> to_sql 을 통해서 DB에 적재
+        # 1. 데이터프레임 만들기?
+        """
+        data = { # dic형태 (키:값[list 형태])
+            "Calories":[340,450,600]
+            "Duration":[]
+            "":[]
+        }
+        df = pd.DataFrame(data)
+        """
+        
+        titles = []
+        links = []
+        dates =[]
 
         for elem in elements:
             # logger.info(f'element: {elem}')
@@ -49,7 +66,19 @@ async def search(keyword: str):
             title = a_tag.text # text : 태그와 태그사이
             link = a_tag['href']
             date = elem.select_one('div.area_job div.job_date span.date')
-            # logger.info(f'title:{title},date: {date.text}, link: {link}')
+            # 데이터 프레임을 만들기 위한 각 컬럼 값들(리스트)
+            titles.append(title)
+            links.append(link)
+            dates.append(date.text)
+            # 데이터 프레임 만들기
+            df = pd.DataFrame({
+                'title': titles, 
+                'link': links, 
+                'date': dates
+            })
+            # to_sql 을 통해 DB에 넣는다.
+            df.to_sql('recruit', con=get_engine(), if_exists='replace')
+            
             info_list.append({'title': title, 'date': date.text, 'link': link})
 
     return {'list': info_list}

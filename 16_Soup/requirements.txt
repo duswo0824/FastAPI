@@ -5,3 +5,7 @@ fastapi
 beautifulsoup4
 httpx
 starlette
+pandas
+pymysql
+sqlalchemy
+python-multipart
